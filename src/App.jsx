@@ -9,7 +9,7 @@ const App = () => {
   return (
     <>
       <Header setLoader={setLoader} />
-      <Body loader={loader} />
+      <Body loader={loader} setLoader={setLoader} />
     </>
   );
 }

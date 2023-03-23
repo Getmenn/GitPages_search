@@ -51,8 +51,12 @@
             font-size: 16px;
             cursor: pointer;
 
-            &:hover{
+            &.active{
                 background: #00A3FF;
+            }
+
+            &:hover{
+                background: #80d0fd;
             }
 
             img{

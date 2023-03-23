@@ -3,7 +3,7 @@ import searchGlass from '../../assets/searchGlass.svg'
 import pencil from '../../assets/pencil.svg'
 import { useEffect, useRef, useState } from 'react';
 
-const Search = ({ handleKeyDown, handleSearch, type }) => {
+const Search = ({ handleKeyDown, handleSearch, type, comment }) => {
     
     const searchRef = useRef(null)
     const [cardStatus, setCardStatus] = useState(false)
@@ -41,7 +41,8 @@ const Search = ({ handleKeyDown, handleSearch, type }) => {
                 placeholder='book title'
                 onKeyDown={handleKeyDown}
                 ref={searchRef}
-                style={cardStatus ? {...styleInput} : {}}
+                style={cardStatus ? { ...styleInput } : {}}
+                defaultValue={comment}
             />
             <img
                 src={cardStatus ? pencil : searchGlass}

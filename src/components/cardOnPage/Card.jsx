@@ -3,11 +3,16 @@ import star from '../../assets/star.svg'
 import eye from '../../assets/eye.svg'
 import avatarExample from '../../assets/avatarExample.jpg'
 import { Search } from '../search/Search'
+import { useEffect, useState } from 'react'
 
-const Card = ({name, author, url, image, stars, watchers}) => {
+const Card = ({ name, author, url, image, stars, watchers, id}) => {
+
+  const [comment, setComment] = useState('')
 
   const handleSearch = (value) => {
     console.log(value);
+    console.log(id);
+    localStorage.setItem(`comm-${id}`, value)
   }
 
   const handleKeyDown = (event) => {
@@ -15,6 +20,12 @@ const Card = ({name, author, url, image, stars, watchers}) => {
       handleSearch(event.target.value);
     }
   }
+
+  useEffect(() => {
+    if (localStorage.getItem(`comm-${id}`)) {
+      setComment(localStorage.getItem(`comm-${id}`))
+    }
+  },[])
  
   return (
     <div className="card">
@@ -37,7 +48,12 @@ const Card = ({name, author, url, image, stars, watchers}) => {
         <span>{watchers}</span>
       </div>
 
-      <Search handleSearch={handleSearch} handleKeyDown={handleKeyDown} type={'card'} />
+      <Search
+        handleSearch={handleSearch}
+        handleKeyDown={handleKeyDown}
+        type={'card'}
+        comment={comment}
+      />
 
     </div>
   );
