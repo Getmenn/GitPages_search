@@ -10,7 +10,7 @@ The application contains one page and implements the following mechanism:
 
 ## Functions⚡
 
-1. Pagination capability: The number of items per page is selected from dropdown list (6, 12, 30).
+1. Possibility of pagination: the number of elements on the page is selected from the drop-down list **(6, 12, 30)**. **I changed the numbers because 10 elements on the page can be nicely divided by 5 or 2**.
 2. When reloading the page, restore the search query in the search bar, cards
 projects, the actual page (in the paginator) without sending a request to the Github API, i.e.
 restore data from locally saved ones.
