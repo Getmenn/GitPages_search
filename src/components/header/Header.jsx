@@ -1,7 +1,7 @@
 import './header.scss'
 import { Search } from '../search/Search';
 import { useDispatch } from 'react-redux';
-import { addPages, loadTotal } from '../../Redux/mainReducer';
+import { addPages, loadTotal, newPages } from '../../Redux/mainReducer';
 import { GithubApi } from '../../api/GithubApi';
 import { useEffect, useState } from 'react';
 
@@ -21,7 +21,7 @@ const Header = ({setLoader}) => {
     const response = await GithubApi.getPages(value)
     localStorage.setItem('search', value)
     localStorage.setItem('response', JSON.stringify(response))
-    dispatch(addPages(response.items))
+    dispatch(newPages(response.items))
     dispatch(loadTotal(response.total_count))
     setLoader('stop')
   }

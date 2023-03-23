@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPages, loadTotal } from '../../Redux/mainReducer';
+import { GithubApi } from '../../api/GithubApi';
+import { addPages, loadTotal, newPages } from '../../Redux/mainReducer';
 import { Card } from '../cardOnPage/Card';
 import './body.scss'
 import { Navigation } from './Navigation';
@@ -16,17 +17,46 @@ const Body = ({loader, setLoader}) => {
   useEffect(() => {
     setStartNumberElement(0);
     setEndNumberElement(countElements);
+    console.log(countElements);
   }, [countElements]);
 
   useEffect(() => {
     if (localStorage.getItem('response')) {
       setLoader('search')
       const response = JSON.parse(localStorage.getItem('response'))
-      dispatch(addPages(response.items))
+      dispatch(newPages(response.items))
       dispatch(loadTotal(response.total_count))
       setLoader('stop')
     }
   }, [])
+
+  const handleSelectPage = async (pageNumber, setActivePage) => {
+    setLoader('search')
+    const startNumber = countElements * pageNumber - countElements + pageNumber - 1
+    const endNumber = countElements * pageNumber + pageNumber - 1
+    setStartNumberElement(startNumber)
+    setEndNumberElement(endNumber)
+    handleLoadPages(pageNumber, startNumber)
+    setActivePage(pageNumber)
+    
+  }
+
+  
+  const handleLoadPages = async (pageNumber, startNumber) => {
+    const responseStorage = JSON.parse(localStorage.getItem('response'))
+
+    if (startNumber >= responseStorage.items.length || countElements === 29) {
+      const response = await GithubApi.getPagesFromNumber(localStorage.getItem('search'), pageNumber, countElements + 1)
+      dispatch(addPages(response.items))
+      localStorage.setItem('response', JSON.stringify({...responseStorage, items: [...responseStorage.items, ...response.items]})) 
+    }
+    else if(countElements === 11 && startNumber === responseStorage.items.length - 6){
+      const response = await GithubApi.getPagesFromNumber(localStorage.getItem('search'), pageNumber, countElements + 1)
+      dispatch(addPages(response.items))
+      localStorage.setItem('response', JSON.stringify({...responseStorage, items: [...responseStorage.items, ...response.items]})) 
+    }
+    setLoader('stop')
+  }
   
   return (
     <div className="body">
@@ -35,7 +65,7 @@ const Body = ({loader, setLoader}) => {
           {pages.map((el, index) => {
             if (index <= endNumberElement && index >= startNumberElement) {
               return <Card
-                key={el.id}
+                key={`${el.id}${el.html_url}`}
                 name={el.name}
                 author={el.owner.login}
                 url={el.html_url}
@@ -51,12 +81,13 @@ const Body = ({loader, setLoader}) => {
           </div>
         : <h1>{loader === 'search' ? 'Поиск проектов...' : 'Введите текст для поиска' }</h1>
       }
-      {loader === 'stop'
+      {loader === 'stop' || loader === 'search'
         ? <Navigation
             setCountElements={setCountElements}
             countElements={countElements}
             setStartNumberElement={setStartNumberElement}
             setEndNumberElement={setEndNumberElement}
+            handleSelectPage = {handleSelectPage}
           />
         : null}
     </div>

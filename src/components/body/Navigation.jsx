@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import {GithubApi} from '../../api/GithubApi'
 import arrow from '../../assets/arrow.svg'
 
-const Navigation = ({ setCountElements, countElements, setStartNumberElement, setEndNumberElement}) => {
+const Navigation = ({ setCountElements, countElements, setStartNumberElement, setEndNumberElement, handleSelectPage}) => {
 
     const [numbersPages, setNumbersPages] = useState([1, 2, 3])
     const [activePage, setActivePage] = useState(1)
@@ -12,7 +13,7 @@ const Navigation = ({ setCountElements, countElements, setStartNumberElement, se
     }, [countElements])
     
     const handlePagesCount = (event) => {
-        setCountElements(event.target.value)
+        setCountElements(Number(event.target.value))
     }
 
     const handlePrev = () => {
@@ -25,11 +26,7 @@ const Navigation = ({ setCountElements, countElements, setStartNumberElement, se
         setNumbersPages(numbersPages.map(el => el + 1))
     }
 
-    const handleSelectPage = (pageNumber) => {
-        setActivePage(pageNumber)
-        setStartNumberElement(countElements * pageNumber - countElements + pageNumber - 1)
-        setEndNumberElement(countElements * pageNumber + pageNumber - 1)
-    }
+    
 
     return (
         <div className="navigation">
@@ -45,19 +42,19 @@ const Navigation = ({ setCountElements, countElements, setStartNumberElement, se
                 </div>
                 <div
                     className={`navBox ${activePage === numbersPages[0] ? 'active' : ''}`}
-                    onClick={() => handleSelectPage(numbersPages[0])}
+                    onClick={() => handleSelectPage(numbersPages[0], setActivePage)}
                 >
                     {numbersPages[0]}
                 </div>
                 <div
                     className={`navBox ${activePage === numbersPages[1] ? 'active' : ''}`}
-                    onClick={() => handleSelectPage(numbersPages[1])}
+                    onClick={() => handleSelectPage(numbersPages[1], setActivePage)}
                 >
                     {numbersPages[1]}
                 </div>
                 <div
                     className={`navBox ${activePage === numbersPages[2] ? 'active' : ''}`}
-                    onClick={() => handleSelectPage(numbersPages[2])}
+                    onClick={() => handleSelectPage(numbersPages[2], setActivePage)}
                 >
                     {numbersPages[2]}
                 </div>
