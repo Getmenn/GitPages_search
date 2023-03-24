@@ -7,14 +7,16 @@ const Search = ({ handleKeyDown, handleSearch, type, comment }) => {
     
     const searchRef = useRef(null)
     const handleSearchClick = () => {
-        handleSearch(searchRef.current.value);
+        if (searchRef.current.value.length >= 3) {
+            handleSearch(searchRef.current.value);
+        }
     }
 
     return (
         <div className={`search ${type === 'card' ? 'small' : ''}`}>
             <input
                 type="text"
-                placeholder='book title'
+                placeholder='Начните вводить текст для поиска (не менее трех символов)'
                 onKeyDown={handleKeyDown}
                 ref={searchRef}
                 defaultValue={comment}
